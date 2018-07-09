@@ -18,7 +18,7 @@ const breweriesRoutes     = require("./routes/breweries");
 const indexRoutes         = require("./routes/index");
 
 mongoose.Promise = global.Promise;
-//mongoose.connect("mongodb://localhost/nodeCapstone2");
+//mongodb://jordan:password123@ds231991.mlab.com:31991/brewerybrainiac
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
