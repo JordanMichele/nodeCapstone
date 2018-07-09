@@ -15,7 +15,7 @@ router.get("/", function(req, res){
   });
 });
 
-// Create - add new campground to DB
+// Create - add new brewery to DB
 router.post("/", middleware.isLoggedIn, function(req, res){
   // get data from form and add to breweries array
   let name = req.body.name;
@@ -39,7 +39,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
   });
 });
 
-//New - show form to create new campground
+//New - show form to create new brewery
 router.get("/new", middleware.isLoggedIn, function(req, res){
   res.render("breweries/new");
 });
@@ -67,7 +67,7 @@ router.get("/:id/edit", middleware.checkBreweryOwnership, function(req, res){
 //Update Brewery Route
 router.put("/:id", middleware.checkBreweryOwnership, function(req, res){
   //find and update the correct brewery
-  Brewery.findByIdAndUpdate(req.params.id,req.body.campground, function(err, updatedBrewery){
+  Brewery.findByIdAndUpdate(req.params.id,req.body.brewery, function(err, updatedBrewery){
     if(err){
       res.redirect("/breweries");
     } else {
@@ -77,7 +77,7 @@ router.put("/:id", middleware.checkBreweryOwnership, function(req, res){
   //redirect somewhere(showpage)
 });
 
-//Destroy Campground Route
+//Destroy Brewery Route
 router.delete("/:id", middleware.checkBreweryOwnership, function(req, res){
   Brewery.findByIdAndRemove(req.params.id, function(err){
     if(err){
