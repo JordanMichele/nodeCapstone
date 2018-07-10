@@ -1,8 +1,8 @@
-var mongoose  = require("mongoose");
-var Brewery   = require("./models/breweries");
-var Comment   = require("./models/comment");
+const mongoose  = require("mongoose");
+const Brewery   = require("./models/breweries");
+const Comment   = require("./models/comment");
 
-var data = [
+let data = [
     {
         name: "Cloud's Rest",
         image: "https://farm4.staticflickr.com/3795/10131087094_c1c0a1c859.jpg",
@@ -56,7 +56,7 @@ function seedDB(){
                     }
                 });
             });
-        }); 
+        });
     });
     //add a few comments
 }
