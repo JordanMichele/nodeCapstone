@@ -2,6 +2,16 @@ const express    = require("express");
 const router     = express.Router();
 const Brewery    = require("../models/breweries");
 const middleware = require("../middleware");
+var NodeGeocoder = require('node-geocoder');
+
+var options = {
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: process.env.GEOCODER_API_KEY,
+  formatter: null
+};
+
+var geocoder = NodeGeocoder(options);
 
 //INDEX - show all breweries
 router.get("/", function(req, res){
@@ -15,27 +25,35 @@ router.get("/", function(req, res){
   });
 });
 
-// Create - add new brewery to DB
+//CREATE - add new Brewery to DB
 router.post("/", middleware.isLoggedIn, function(req, res){
-  // get data from form and add to breweries array
-  let name = req.body.name;
-  let price = req.body.price;
-  let image = req.body.image;
-  let desc = req.body.description;
-  let author = {
-    id: req.user._id,
-    username: req.user.username
+  // get data from form and add to campgrounds array
+  var name = req.body.name;
+  var image = req.body.image;
+  var desc = req.body.description;
+  var author = {
+      id: req.user._id,
+      username: req.user.username
   }
-  let newBrewery = {name: name, price: price, image: image, description: desc, author: author}
-  //create a new brewery and save to database
-  Brewery.create(newBrewery, function(err, newlyCreated){
-    if(err){
-      console.log(err);
-    } else {
-      // redirect back to breweries page
-      console.log(newlyCreated);
-      res.redirect("/breweries")
+  geocoder.geocode(req.body.location, function (err, data) {
+    if (err || !data.length) {
+      req.flash('error', 'Invalid address');
+      return res.redirect('back');
     }
+    var lat = data[0].latitude;
+    var lng = data[0].longitude;
+    var location = data[0].formattedAddress;
+    var newCampground = {name: name, image: image, description: desc, author:author, location: location, lat: lat, lng: lng};
+    // Create a new campground and save to DB
+    Brewery.create(newBrewery, function(err, newlyCreated){
+        if(err){
+            console.log(err);
+        } else {
+            //redirect back to campgrounds page
+            console.log(newlyCreated);
+            res.redirect("/breweries");
+        }
+    });
   });
 });
 
@@ -64,18 +82,28 @@ router.get("/:id/edit", middleware.checkBreweryOwnership, function(req, res){
       });
     });
 
-//Update Brewery Route
-router.put("/:id", middleware.checkBreweryOwnership, function(req, res){
-  //find and update the correct brewery
-  Brewery.findByIdAndUpdate(req.params.id,req.body.brewery, function(err, updatedBrewery){
-    if(err){
-      res.redirect("/breweries");
-    } else {
-      res.redirect("/breweries/" + req.params.id)
-    }
-  });
-  //redirect somewhere(showpage)
-});
+// UPDATE CAMPGROUND ROUTE
+  router.put("/:id", middleware.checkBreweryOwnership, function(req, res){
+      geocoder.geocode(req.body.location, function (err, data) {
+        if (err || !data.length) {
+          req.flash('error', 'Invalid address');
+          return res.redirect('back');
+        }
+        req.body.brewery.lat = data[0].latitude;
+        req.body.brewery.lng = data[0].longitude;
+        req.body.brewery.location = data[0].formattedAddress;
+
+        Brewery.findByIdAndUpdate(req.params.id, req.body.brewery, function(err, brewery){
+            if(err){
+                req.flash("error", err.message);
+                res.redirect("back");
+            } else {
+                req.flash("success","Successfully Updated!");
+                res.redirect("/breweries/" + brewery._id);
+            }
+        });
+      });
+    });
 
 //Destroy Brewery Route
 router.delete("/:id", middleware.checkBreweryOwnership, function(req, res){
