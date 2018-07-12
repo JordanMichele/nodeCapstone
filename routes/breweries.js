@@ -2,16 +2,16 @@ const express    = require("express");
 const router     = express.Router();
 const Brewery    = require("../models/breweries");
 const middleware = require("../middleware");
-var NodeGeocoder = require('node-geocoder');
+const NodeGeocoder = require('node-geocoder');
 
-var options = {
+let options = {
   provider: 'google',
   httpAdapter: 'https',
   apiKey: process.env.GEOCODER_API_KEY,
   formatter: null
 };
 
-var geocoder = NodeGeocoder(options);
+let geocoder = NodeGeocoder(options);
 
 //INDEX - show all breweries
 router.get("/", function(req, res){
@@ -27,11 +27,11 @@ router.get("/", function(req, res){
 
 //CREATE - add new Brewery to DB
 router.post("/", middleware.isLoggedIn, function(req, res){
-  // get data from form and add to campgrounds array
-  var name = req.body.name;
-  var image = req.body.image;
-  var desc = req.body.description;
-  var author = {
+  // get data from form and add to breweries array
+  let name = req.body.name;
+  let image = req.body.image;
+  let desc = req.body.description;
+  let author = {
       id: req.user._id,
       username: req.user.username
   }
@@ -40,16 +40,16 @@ router.post("/", middleware.isLoggedIn, function(req, res){
       req.flash('error', 'Invalid address');
       return res.redirect('back');
     }
-    var lat = data[0].latitude;
-    var lng = data[0].longitude;
-    var location = data[0].formattedAddress;
-    var newCampground = {name: name, image: image, description: desc, author:author, location: location, lat: lat, lng: lng};
-    // Create a new campground and save to DB
+    let lat = data[0].latitude;
+    let lng = data[0].longitude;
+    let location = data[0].formattedAddress;
+    let newBrewery = {name: name, image: image, description: desc, author:author, location: location, lat: lat, lng: lng};
+    // Create a new brewery and save to DB
     Brewery.create(newBrewery, function(err, newlyCreated){
         if(err){
             console.log(err);
         } else {
-            //redirect back to campgrounds page
+            //redirect back to breweries page
             console.log(newlyCreated);
             res.redirect("/breweries");
         }
