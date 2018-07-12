@@ -36,6 +36,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
       id: req.user._id,
       username: req.user.username
   }
+  //Utilize the Geocode/ Google Maps API to take the location from the form and submit it
   geocoder.geocode(req.body.location, function (err, data) {
     if (err || !data.length) {
       req.flash('error', 'Invalid address');
