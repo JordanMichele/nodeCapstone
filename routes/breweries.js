@@ -45,7 +45,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     let lat = data[0].latitude;
     let lng = data[0].longitude;
     let location = data[0].formattedAddress;
-    let newBrewery = {name: name, price: price, image: image, description: desc, author:author, location: location, lat: lat, lng: lng};
+    let newBrewery = {name: name, price: price, image: image, description: desc, author: author, location: location, lat: lat, lng: lng};
     // Create a new brewery and save to DB
     Brewery.create(newBrewery, function(err, newlyCreated){
         if(err){

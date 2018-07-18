@@ -1,8 +1,8 @@
 <% include ./partials/header %>
 
-<div class="row">
-    <h1 style="text-align: center">Login</h1>
-    <div style="width: 30%; margin: 25px auto;">
+<div class="row" id="loginEJS">
+    <h1 class="h1Login">Login</h1>
+    <div class="loginForm">
         <form action="/login" method="post">
             <div class="form-group">
                 <input class="form-control" type="text" name="username" placeholder="username">
@@ -15,6 +15,11 @@
             </div>
         </form>
         <a href="/breweries">Go Back</a>
+        <div class="tempLogin">
+          <h3>Temporary Account</h3>
+          <p>Username: temp</p>
+          <p>Password: password</p>
+        </div>
     </div>
 </div>
 
