@@ -66,13 +66,6 @@
       <strong><%= brewery.name %><br/>
       <%= brewery.location %></strong>
       <p><%= brewery.description %></p>
-          brewery.opening_hours.weekday_text[0] + '<br>' +
-          place.opening_hours.weekday_text[1] + '<br>' +
-          place.opening_hours.weekday_text[2] + '<br>' +
-          place.opening_hours.weekday_text[3] + '<br>' +
-          place.opening_hours.weekday_text[4] + '<br>' +
-          place.opening_hours.weekday_text[5] + '<br>' +
-          place.opening_hours.weekday_text[6] + '<br>'
     `
     let infowindow = new google.maps.InfoWindow({
       content: contentString
